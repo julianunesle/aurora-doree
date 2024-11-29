@@ -2,6 +2,7 @@
 
 $red : red;
 $palebrown: #B29F91;
+$background: #422110;
 $white: #ececec;
 
 @mixin gradient(){
@@ -11,6 +12,11 @@ $white: #ececec;
 @mixin flex-column(){
     display: flex;
     flex-direction: column;
+}
+
+@mixin container-max-width(){
+    max-width: 1280px;
+    border: 5px solid greenyellow;
 }
 
 *{
@@ -26,7 +32,7 @@ $white: #ececec;
 body{
     font-family: "Raleway", sans-serif;
     font-optical-sizing: auto;  
-    background: #cb8a586c;    
+    background: #e6d7cc6c;    
 }
 
 input{
@@ -46,4 +52,10 @@ input[type=submit]{
    @include gradient();
    color: $white;
 
+}
+
+a{
+    &:visited{
+        all: unset;
+    }
 }
