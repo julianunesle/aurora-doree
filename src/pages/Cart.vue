@@ -1,6 +1,6 @@
 <template>
 
-  <h1>Olha o carrinhoooo</h1>
+  <h1>Olha o carrinhoooo {{teste}}</h1>
 
   <div class="cart-container">
 
@@ -149,14 +149,18 @@
 <script>
 import Card from '../components/ProductCard.vue'
 import iconTrash from '../assets/icons/trash.svg'
+import { useCartStore } from '../store/index';
+
+
 export default {
   components: {
     Card, iconTrash
   },
   data() {
     return {
-      name: 'Kelly',
+     // name: '',
       metodoDePagamento: null,
+      teste : useCartStore().name
     }
   },
   methods: {
