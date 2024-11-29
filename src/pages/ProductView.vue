@@ -2,26 +2,19 @@
 
   <div class="product-view">
     <div class="img-wrap">
-      <img
-        src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Blue_Bottle%2C_Kyoto_Style_Ice_Coffee_%285909775445%29.jpg" />
+      <img :src="selectedProduct.image" />
     </div>
     <div class="info">
-      <button >Adicionar ao carrinho</button> <br/>
-      <!-- <button @click="takeToCart" >Comprar +</button> -->
-
-      <h1>Cafezinho Top</h1>
+      <button @click="takeToCart(selectedProduct.id)">Adicionar ao carrinho</button> <br />
+      <h1>{{ selectedProduct ? selectedProduct.title : 'Undefined' }}</h1>
       <p>
-        Ännu en berömd och utsökt kall dryck för dem som föredrar choklad. Tänk dig smaken av en shake med choklad och vispad grädde på toppen.
+        {{ selectedProduct.description }}
       </p>
 
       <section class="ingredients">
         <h4>Ingredients:</h4>
         <ul>
-          <li>Coffee</li>
-          <li>Is</li>
-          <li>Mjölk</li>
-          <li>Cocoa</li>
-          <li>Vispgrädde</li>
+          <li v-for="(ingredient, index) in selectedProduct.ingredients" :key="index">{{ ingredient }}</li>
         </ul>
       </section>
     </div>
@@ -30,23 +23,33 @@
   </div>
 </template>
 <script>
+import axios from 'axios';
 import Card from '../components/ProductCard.vue'
+import { api_url } from '../api';
 export default {
   components: {
     Card
   },
   data() {
     return {
-      name: 'Kelly'
+      selectedProduct: []
     }
   },
+  //Tirar o fixado do componete 
   methods: {
-    takeToCart(){
-      this.$router.push('/cart')
+    takeToCart(id) {
+      console.log('Adicionar ao carrinho', id)
+      //    this.$router.push('/cart')
+    },
+    getCoffeeById() {
+      let id = this.$route.params.id
+      axios.get(`${api_url}/hot/${id}`)
+        .then((response) => this.selectedProduct = response.data)
+
     }
   },
   mounted() {
-    //  console.log('Abri!')
+    this.getCoffeeById()
   }
 }
 </script>
@@ -59,22 +62,29 @@ export default {
   flex-wrap: wrap;
 
   .img-wrap {
-    width: 80dvw;
+    width: clamp(200px, 80dvw, 400px);
+    height: 350px;
+    border-radius: 6px;
+    overflow: hidden;
 
     img {
+      height: 100%;
       width: 100% !important;
     }
   }
-  
-  
+
+
   div {
     width: 80dvw;
-    border: 1px solid green;
     margin: 10px;
   }
-  
-  .info{
-    p{
+
+  .info {
+    button {
+      cursor: pointer;
+    }
+
+    p {
       margin-block: 15px;
       text-align: justify;
     }
@@ -85,14 +95,14 @@ export default {
 @media screen and (min-width:768px) {
   .product-view {
     flex-direction: row !important;
+    justify-self: center;
+    margin-top: 50px;
 
     .img-wrap {
-      width: 35dvw;
-
+      width: clamp(270px, 35dvw, 350px);
     }
 
     div {
-      border: 5px solid rgb(128, 36, 0);
       width: 45dvw;
     }
   }
