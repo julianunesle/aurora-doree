@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
+$red : red;
+$palebrown: #B29F91;
+$white: #ececec;
+
+@mixin gradient(){
+    background: linear-gradient(to right,#CB8A58,#723d28 );
+}
+
+@mixin flex-column(){
+    display: flex;
+    flex-direction: column;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    outline: none;
+    box-sizing: border-box;
+    border: none;
+    list-style: none;
+    text-decoration: none;
+}
+
+body{
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;  
+    background: #cb8a586c;    
+}
+
+input{
+    height: 45px;
+    border-radius: 5px;
+    width: clamp(40px,85%,320px);
+    padding: 8px;
+    margin-block: 8px;
+}
+
+input:not([type=submit]){
+    border: 1px solid $palebrown;
+ 
+}   
+
+input[type=submit]{
+   @include gradient();
+   color: $white;
+
+}
