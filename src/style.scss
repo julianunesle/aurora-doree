@@ -55,5 +55,8 @@ input[type=submit] {
 
 a {
     all: unset;
-
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: .5s;
+   
 }

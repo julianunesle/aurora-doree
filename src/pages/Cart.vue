@@ -3,9 +3,8 @@
   <h1>Olha o carrinhoooo {{ teste }}</h1>
 
   <div class="cart-container">
-
-    <div class="itens" v-for="(item, index) in itensOnCart" :key="item.id">
-      <div class="cart-item">
+    <div class="itens">
+      <div class="cart-item" v-for="(item, index) in itensOnCart" :key="item.id">
         <img :src="item.image" />
         <h4>{{ item.title }}</h4>
         <button class="remove-item" @click="removeItem(item.id)">
@@ -16,16 +15,15 @@
           @change="updateItem(item.id, index)" />
       </div>
     </div>
-    Valor: {{ amout }}
 
-    <!-- Division
+
     <div class="checkout-details">
       <ul>
         <li>
-          <p>Subtotal : R$ 230,04</p>
-          <p>Frete : R$ 230,04</p>
-          <p>Taxa de Serviço : R$ 230,04</p>
-          <p>Total : R$ 230,04</p>
+          <p>Subtotal : R$ {{ taxes.amount}}</p>
+          <p>Frete : R$ {{ taxes.shipping }}</p>
+          <p>Taxa de Serviço : R$ {{ taxes.tax }}</p>
+          <p>Total : R$ {{ taxes.total }}</p>
 
         </li>
       </ul>
@@ -82,7 +80,7 @@
         <button class="checkout" v-if="metodoDePagamento == 'pix' || metodoDePagamento == 'boleto'">Copiar</button>
         <button class="checkout" v-else>Finalizar Compra</button>
       </form>
-    </div> -->
+    </div>
 
   </div>
 
@@ -95,6 +93,7 @@ import Card from '../components/ProductCard.vue'
 import iconTrash from '../assets/icons/trash.svg'
 import { useCartStore } from '../store/index';
 import { mapActions } from 'pinia';
+import { setTax } from '../utils';
 
 
 
@@ -109,6 +108,7 @@ export default {
       teste: useCartStore().name,
       itensOnCart: useCartStore().cartList,
       amout: useCartStore().cartAmout,
+      taxes: setTax(useCartStore().cartAmout)
 
     }
   },
@@ -122,10 +122,15 @@ export default {
       // valueInput = valueInput <= 0 ? 1 : valueInput && valueInput > 15 ? 15 : valueInput
       this.changeQuantity(id, Number(valueInput <= 0 ? 1 : valueInput))
       this.amout = useCartStore().cartAmout
+      this.setTaxes()
     },
     removeItem(id) {
       this.removeToCart(id)
       this.amout = useCartStore().cartAmout
+    },
+
+    setTaxes(){
+this.taxes = setTax(this.amout)
     }
   },
   watch: {
@@ -143,8 +148,6 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-
-
 
 
   .cart-item {
