@@ -20,7 +20,7 @@
     <div class="checkout-details">
       <ul>
         <li>
-          <p>Subtotal : R$ {{ taxes.amount}}</p>
+          <p>Subtotal : R$ {{ taxes.amount }}</p>
           <p>Frete : R$ {{ taxes.shipping }}</p>
           <p>Taxa de Serviço : R$ {{ taxes.tax }}</p>
           <p>Total : R$ {{ taxes.total }}</p>
@@ -32,13 +32,14 @@
         <span class="paymment-method">
           <label for="pix">
             Pix
+            <iconPix />
           </label>
-
           <input type="radio" name="paymment_method" id="pix" value="pix" v-model="metodoDePagamento">
         </span>
         <span class="paymment-method">
           <label for="cartao">
             Cartão
+            <iconCreditCard/>
           </label>
 
           <input type="radio" id="cartao" name="paymment_method" value="cartao" v-model="metodoDePagamento">
@@ -46,6 +47,7 @@
         <span class="paymment-method">
           <label for="boleto">
             Boleto
+            <iconBarCode/>
           </label>
 
           <input type="radio" id="boleto" name="paymment_method" value="boleto" v-model="metodoDePagamento">
@@ -54,6 +56,7 @@
         <span class="paymment-method">
           <label for="ticket">
             Ticket
+            <iconTicket/>
           </label>
           <input type="radio" id="ticket" name="paymment_method" value="ticket" v-model="metodoDePagamento">
         </span>
@@ -62,8 +65,8 @@
       <form action="">
 
         <section v-if="metodoDePagamento == 'cartao' || metodoDePagamento == 'ticket'">
-          Cartão de credito
-           <input type="text" placeholder="Nome do titular" />
+        <p style="marginBlock: 20px ;">{{ metodoDePagamento == 'cartao' ? 'Cartão de credito' : 'Vale Alimentação'}}</p>  
+          <input type="text" placeholder="Nome do titular" />
           <input type="text" placeholder="Numero do cartão" />
           <span>
             <input type="input" placeholder="CCV" />
@@ -94,12 +97,17 @@ import iconTrash from '../assets/icons/trash.svg'
 import { useCartStore } from '../store/index';
 import { mapActions } from 'pinia';
 import { setTax } from '../utils';
+import iconPix from '../assets/icons/paymment/pix.svg'
+import iconCreditCard from '../assets/icons/paymment/credit-card.svg'
+import iconBarCode from '../assets/icons/paymment/bar-code.svg'
+import iconTicket from '../assets/icons/paymment/ticket.svg'
 
 
 
 export default {
   components: {
-    Card, iconTrash
+    Card, iconTrash, iconPix, iconCreditCard,
+    iconBarCode, iconTicket
   },
   data() {
     return {
@@ -128,8 +136,8 @@ export default {
       this.amout = useCartStore().cartAmout
     },
 
-    setTaxes(){
-this.taxes = setTax(this.amout)
+    setTaxes() {
+      this.taxes = setTax(this.amout)
     }
   },
   watch: {
@@ -194,7 +202,6 @@ this.taxes = setTax(this.amout)
     }
 
     .btn-qntd {
-      // border: 1px solid teal;
       height: 50%;
       text-align: center;
       margin-block: 0px !important;
@@ -206,12 +213,33 @@ this.taxes = setTax(this.amout)
 
 .checkout-details {
   width: 100%;
-  border: 2px solid rgba(97, 160, 212, 0.288);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  padding: 30px;
+  border-radius: 4px;
 
   ul {
-    border-bottom: 2px dotted brown;
+    border-bottom: .5px solid brown;
+    margin-top: 25px;
     margin-bottom: 15px;
     padding-bottom: 8px;
+   
+  }
+
+  form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    width: min-content;
+
+    input{
+      width: 100%;
+    }
+
   }
 
   .checkout {
@@ -221,31 +249,36 @@ this.taxes = setTax(this.amout)
     padding-block: 10px;
     border-radius: 4px;
     cursor: pointer;
-    width: 70%;
+    width: clamp(100px, 75vw, 250px);
+    
+    align-self: center;
+    justify-self: center;
   }
 
   .paymment-method {
-    border: 1px solid red;
     display: inline-flex;
     width: 70px;
     height: 70px;
-    flex-direction: column;
+    flex-direction: column;  
 
     label {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       width: 100%;
-      background: rebeccapurple;
-      color: aqua !important;
+      height: 100%;
+      cursor: pointer;
+
+      svg {
+        width: 70%;
+        height: 70%;
+      }
     }
 
     input {
-      opacity: 0;
-
-      :checked {
-        .paymment-method {
-          border: 2px solid green;
-        }
-      }
+      display: none !important;
+      width: 0;
+      height: 0;
     }
   }
 }
@@ -260,7 +293,10 @@ this.taxes = setTax(this.amout)
 
     .checkout-details {
       width: clamp(100px, 35vw, 450px);
-      border: 2px solid rgb(108, 197, 5);
+
+      ul{
+        margin-top: 0;
+      }
 
     }
   }
