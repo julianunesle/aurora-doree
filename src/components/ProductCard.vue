@@ -8,18 +8,24 @@
                 <h2>
                     {{ title ? title : 'Titulo Fixed' }}
                 </h2>
-                <span> R$2.89 <button>+</button></span>
+                <span> R${{ translateValue(idItem) }}  <button>+</button></span>
             </span>
         </div>
     </RouterLink>
 </template>
 <script>
 import { RouterLink } from 'vue-router';
+import { setValue } from '../utils';
 export default {
     props: {
         title: String,
         img: String,
         idItem: Number
+    },
+    methods:{
+        translateValue(){
+        return setValue(this.idItem)
+        }
     }
 }
 </script>
