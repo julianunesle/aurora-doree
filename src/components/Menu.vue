@@ -47,7 +47,7 @@ export default {
     handleClickOutside(event) {
       const menu = this.$refs.menuList; // Referência ao elemento ul
       const button = event.target.closest('.menu'); // Verifica se o clique foi em um botão
-      if (menu && !menu.contains(event.target) && !button) {
+      if (menu && !menu.contains(event.target) && !button && this.showMenu == true) {
         console.log('Clique fora do menu, fechando...'); // Para depuração
         this.closeMenu();
       }
@@ -55,14 +55,6 @@ export default {
     goToCart(){
       this.$router.push('/cart')
     }
-    //   console.log('Click detectado:', event.target); // Para depuração
-    //   const menu = this.$refs.menuList; // Referência ao elemento ul
-    //   const button = event.target.closest('svg'); // Verifica se o clique foi em um botão
-    //   if (menu && !menu.contains(event.target) && !button) {
-    //     console.log('Clique fora do menu, fechando...'); // Para depuração
-    //     this.closeMenu();
-    //   }
-    // },
   },
   mounted() {
     document.addEventListener('click', this.handleClickOutside);
