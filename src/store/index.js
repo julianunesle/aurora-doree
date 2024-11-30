@@ -2,7 +2,8 @@ import { defineStore } from "pinia";
 
 export const useCartStore = defineStore('cart', {
   state: () => ({
-    count: 0,   
+    count: 0,
+    isLogged: false,
     cartAmout: 0,
     cartList: []
   }),
@@ -11,17 +12,17 @@ export const useCartStore = defineStore('cart', {
     doubleCount: (state) => state.count * 2,
   },
   actions: {
-    increment() {
-      this.count++
+    setLogged(status){
+      this.isLogged = status
     },
     getSubtotal() {
       let total = 0
       for (let n = 0; n < this.cartList.length; n++) {
-          let currentItem = this.cartList[n]
-          total += currentItem.unitaryPrice * currentItem.quantity
+        let currentItem = this.cartList[n]
+        total += currentItem.unitaryPrice * currentItem.quantity
       }
       this.cartAmout = total.toFixed(2)
-  },
+    },
     addToCart(item) {
       let existOnCart = this.cartList !== null && this.cartList.find(({ id }) => id == item.id)
       if (!existOnCart) {
@@ -32,14 +33,14 @@ export const useCartStore = defineStore('cart', {
       }
     },
 
-    changeQuantity(id,qnt){
+    changeQuantity(id, qnt) {
       let product = this.cartList.filter((item) => item.id == id)
       product[0].quantity = qnt
       this.getSubtotal()
     },
     removeToCart(id) {
       let index = this.cartList.findIndex(product => product.id == id)
-      this.cartList.splice(index,1)
+      this.cartList.splice(index, 1)
       this.getSubtotal()
     }
   },
