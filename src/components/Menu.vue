@@ -1,11 +1,12 @@
 <template>
   <nav class="principal-menu">
   
-   <RouterLink to="/" exact @click="closeMenu">Home</RouterLink>
+   <RouterLink to="/" exact @click="closeMenu">Café Doree</RouterLink>
     <ul :class="{ 'show-menu': showMenu }" class="menu-list" ref="menuList">
       <RouterLink to="/" exact @click="closeMenu">Home</RouterLink>
-      <RouterLink to="/login" @click="closeMenu">Login</RouterLink>
-      <RouterLink to="/cadastrar" @click="closeMenu">Cadastro</RouterLink>
+      <RouterLink v-if="isUserLogged == false" to="/login" @click="closeMenu">Login</RouterLink>
+      <RouterLink v-if="isUserLogged == false" to="/cadastrar" @click="closeMenu">Cadastro</RouterLink>
+      <RouterLink v-else to=""  @click="logout">Sair</RouterLink>
     </ul>
     <span>
       <button @click="goToCart">
@@ -24,6 +25,8 @@ import { RouterLink } from 'vue-router';
 import menuIcon from '../assets/icons/menu.svg';
 import menuCloseIcon from '../assets/icons/close.svg';
 import shoppingCart from '../assets/icons/shopping-cart.svg';
+import { useCartStore } from '../store';
+import { mapActions } from 'pinia';
 
 export default {
   name: 'Menu',
@@ -35,9 +38,11 @@ export default {
   data() {
     return {
       showMenu: false,
+      isUserLogged : useCartStore().isLogged
     };
   },
   methods: {
+    ...mapActions(useCartStore, ['setLogged']),
     toggleMenu() {
       this.showMenu = !this.showMenu;
     },
@@ -54,10 +59,17 @@ export default {
     },
     goToCart(){
       this.$router.push('/cart')
+    },
+    logout(){
+      this.closeMenu()
+      this.setLogged(false)
+      this.$router.push('/')
     }
   },
   mounted() {
     document.addEventListener('click', this.handleClickOutside);
+    this.isUserLogged = useCartStore().isLogged
+    console.log(this.isUserLogged)
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside);

@@ -35,15 +35,20 @@ export default {
     },
     methods: {
         ...mapActions(useCartStore, ['setLogged']),
+        setLogin() {
+            this.setLogged(true)
+        },
         signIn() {
+            
+            let hasQuery = this.$route.query.status
             let data = {
                 email: this.userData.email,
                 password: this.userData.password
             }
             axios.post(`${api_aurora_doree}signin`, data)
                 .then(() => {
-                    this.setLogged(true)
-                    this.$router.push('/')
+                    this.$router.push(hasQuery == 'checkout' ? '/cart' : '/')
+                    this.setLogin()
                 }).catch((err) => {
                     this.errorMsg = err.response.data
                 })
@@ -60,6 +65,7 @@ export default {
 
     form {
         width: min-content;
+
         input {
             width: clamp(100px, 80vw, 450px);
         }
