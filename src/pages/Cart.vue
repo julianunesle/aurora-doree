@@ -82,8 +82,12 @@
           </section>
   
           <section v-if="metodoDePagamento == 'boleto'">
-            Boleto
+            <p class="text-center">Linha digitavel</p>
             <p>00190 50095401 44816069 0680935 0314337 3700 00000 100</p>
+          </section>
+          <section v-if="metodoDePagamento == 'pix'">
+            <p class="text-center">Chave aleatória</p>
+            <p>BR0019 0 50095401 44816069 AEQ0680935 GG0314337 3700 7181712 280924FLRK</p>
           </section>
   
   
@@ -162,6 +166,10 @@ export default {
 }
 </script>
 <style lang="scss">
+.text-center{
+  text-align: center;
+  margin-block: 10px;
+}
 .cart-container {
   display: flex;
   flex-wrap: wrap;

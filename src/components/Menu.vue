@@ -4,13 +4,13 @@
    <RouterLink to="/" exact @click="closeMenu">Café Doree</RouterLink>
     <ul :class="{ 'show-menu': showMenu }" class="menu-list" ref="menuList">
       <RouterLink to="/" exact @click="closeMenu">Home</RouterLink>
-      <RouterLink v-if="isUserLogged == false" to="/login" @click="closeMenu">Login</RouterLink>
-      <RouterLink v-if="isUserLogged == false" to="/cadastrar" @click="closeMenu">Cadastro</RouterLink>
-      <RouterLink v-else to=""  @click="logout">Sair</RouterLink>
+      <RouterLink  to="/login" @click="closeMenu">Login</RouterLink>
+      <RouterLink  to="/cadastrar" @click="closeMenu">Cadastro</RouterLink>
+      <RouterLink to="" @click="logout">Sair</RouterLink>
     </ul>
     <span>
       <button @click="goToCart">
-        <shoppingCart class="svg-icon menu" />
+        <shoppingCart class="svg-icon " />
       </button>
       <button @click="toggleMenu">
         <menuCloseIcon v-if="showMenu" class="svg-icon menu" />
@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       showMenu: false,
-      isUserLogged : useCartStore().isLogged
+      isUserLogged :false
     };
   },
   methods: {
@@ -50,10 +50,9 @@ export default {
       this.showMenu = false;
     },
     handleClickOutside(event) {
-      const menu = this.$refs.menuList; // Referência ao elemento ul
-      const button = event.target.closest('.menu'); // Verifica se o clique foi em um botão
+      const menu = this.$refs.menuList; 
+      const button = event.target.closest('.menu'); 
       if (menu && !menu.contains(event.target) && !button && this.showMenu == true) {
-        console.log('Clique fora do menu, fechando...'); // Para depuração
         this.closeMenu();
       }
     },
@@ -93,8 +92,9 @@ export default {
     cursor: pointer;
 
     .svg-icon {
-      width: 45px;
-      height: 47px;
+      width: 37px;
+      height: 39px;
+      margin-left: 15px;
 
       path {
         stroke: antiquewhite !important;

@@ -14,7 +14,6 @@ export const useCartStore = defineStore('cart', {
   actions: {
     setLogged(status) {
       this.isLogged = status
-      console.log('change', status)
     },
     getSubtotal() {
       let total = 0

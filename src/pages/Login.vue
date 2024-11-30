@@ -34,9 +34,8 @@ export default {
         }
     },
     methods: {
-        ...mapActions(useCartStore, ['setLogged']),
         setLogin() {
-            this.setLogged(true)
+           useCartStore().setLogged(true)
         },
         signIn() {
             

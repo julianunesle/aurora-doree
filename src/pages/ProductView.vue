@@ -5,7 +5,9 @@
       <img :src="selectedProduct.image" />
     </div>
     <div class="info">
-      <button @click="takeToCart(selectedProduct.id)">Adicionar ao carrinho</button> <br />
+
+      <input v-if="!addedToCart" type="submit"  @click="takeToCart(selectedProduct.id)" value="Adicionar ao carrinho">
+      <div v-else class="add-to-cart">Item adiconado ao carrinho com sucesso !</div>
       <h1>{{ selectedProduct ? selectedProduct.title : 'Undefined' }}</h1>
       <p>
         {{ selectedProduct.description }}
@@ -35,7 +37,8 @@ export default {
   },
   data() {
     return {
-      selectedProduct: []
+      selectedProduct: [],
+      addedToCart : false,
     }
   },
   methods: {
@@ -43,6 +46,7 @@ export default {
     takeToCart() {
       let item = Object.assign(this.selectedProduct, {quantity: 1, unitaryPrice: setValue(this.selectedProduct.id) })
       this.addToCart(item)
+     this.addedToCart = !this.addedToCart
 
     },
     getCoffeeById() {
@@ -67,7 +71,17 @@ export default {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-
+  .add-to-cart{
+    border: .5px solid $palebrown;
+    padding: 16px 10px;
+  }
+  input{
+    width: 185px;
+    transition: .4s;
+    &:hover{
+      box-shadow: 4px 5px 6px $palebrown;
+    }
+  }
   .img-wrap {
     width: clamp(200px, 80dvw, 400px);
     height: 350px;
