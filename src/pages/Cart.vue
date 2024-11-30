@@ -12,10 +12,11 @@
           <iconTrash />
         </button>
         <p> R$ {{ item.unitaryPrice }}</p>
-        <input :key="item.id" class="btn-qntd" type="number" min="1" max="15" maxlength="2" :value="item.quantity" @change="updateItem(item.id,index)"/>
+        <input :key="item.id" class="btn-qntd" type="number" min="1" max="15" maxlength="2" :value="item.quantity"
+          @change="updateItem(item.id, index)" />
       </div>
     </div>
- Valor:   {{ amout }}
+    Valor: {{ amout }}
 
     <!-- Division
     <div class="checkout-details">
@@ -108,7 +109,7 @@ export default {
       teste: useCartStore().name,
       itensOnCart: useCartStore().cartList,
       amout: useCartStore().cartAmout,
-      
+
     }
   },
   methods: {
@@ -116,14 +117,15 @@ export default {
     takeToCart() {
       this.$router.push('/')
     },
-    updateItem(id,index){
+    updateItem(id, index) {
       let valueInput = document.querySelectorAll('.btn-qntd')[index].value
-     // valueInput = valueInput <= 0 ? 1 : valueInput && valueInput > 15 ? 15 : valueInput
-      this.changeQuantity(id,Number(valueInput <= 0 ? 1 : valueInput))
+      // valueInput = valueInput <= 0 ? 1 : valueInput && valueInput > 15 ? 15 : valueInput
+      this.changeQuantity(id, Number(valueInput <= 0 ? 1 : valueInput))
       this.amout = useCartStore().cartAmout
     },
     removeItem(id) {
       this.removeToCart(id)
+      this.amout = useCartStore().cartAmout
     }
   },
   watch: {
