@@ -25,7 +25,5 @@ export default {
 }
 </script>
 <style lang="scss" type="text/scss" >
-h1 {
-  color: $red;
-}
+
 </style>

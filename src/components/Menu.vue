@@ -1,19 +1,19 @@
 <template>
   <nav class="principal-menu">
-    sasa
-    <ul class="menu-list">
-      <RouterLink to="/" exact>Home</RouterLink>
-      <RouterLink to="/login">Login</RouterLink>
-      <RouterLink to="/cadastrar">Cadastro</RouterLink>
+  
+   <RouterLink to="/" exact @click="closeMenu">Home</RouterLink>
+    <ul :class="{ 'show-menu': showMenu }" class="menu-list" ref="menuList">
+      <RouterLink to="/" exact @click="closeMenu">Home</RouterLink>
+      <RouterLink to="/login" @click="closeMenu">Login</RouterLink>
+      <RouterLink to="/cadastrar" @click="closeMenu">Cadastro</RouterLink>
     </ul>
     <span>
-
       <button @click="goToCart">
         <shoppingCart class="svg-icon menu" />
       </button>
       <button @click="toggleMenu">
-        <menuCloseIcon class="svg-icon menu" v-if="showMenu" />
-        <menuIcon class="svg-icon menu" v-else />
+        <menuCloseIcon v-if="showMenu" class="svg-icon menu" />
+        <menuIcon v-else class="svg-icon menu" />
       </button>
     </span>
   </nav>
@@ -21,33 +21,58 @@
 
 <script>
 import { RouterLink } from 'vue-router';
-// import menuIcon from '../assets/vue.svg'
-import menuIcon from '../assets/icons/menu.svg'
-import menuCloseIcon from '../assets/icons/close.svg'
-import shoppingCart from '../assets/icons/shopping-cart.svg'
+import menuIcon from '../assets/icons/menu.svg';
+import menuCloseIcon from '../assets/icons/close.svg';
+import shoppingCart from '../assets/icons/shopping-cart.svg';
+
 export default {
   name: 'Menu',
   components: {
-    menuIcon, menuCloseIcon,shoppingCart
+    menuIcon,
+    menuCloseIcon,
+    shoppingCart,
   },
   data() {
     return {
-      showMenu: false
-
-    }
+      showMenu: false,
+    };
   },
   methods: {
     toggleMenu() {
-      const menuList = document.getElementsByClassName('menu-list')[0]
-      this.showMenu = !this.showMenu
-      this.showMenu ? menuList.classList.add('show-menu') : menuList.classList.remove('show-menu')
+      this.showMenu = !this.showMenu;
+    },
+    closeMenu() {
+      this.showMenu = false;
+    },
+    handleClickOutside(event) {
+      const menu = this.$refs.menuList; // Referência ao elemento ul
+      const button = event.target.closest('.menu'); // Verifica se o clique foi em um botão
+      if (menu && !menu.contains(event.target) && !button) {
+        console.log('Clique fora do menu, fechando...'); // Para depuração
+        this.closeMenu();
+      }
     },
     goToCart(){
       this.$router.push('/cart')
     }
-  }
-}
+    //   console.log('Click detectado:', event.target); // Para depuração
+    //   const menu = this.$refs.menuList; // Referência ao elemento ul
+    //   const button = event.target.closest('svg'); // Verifica se o clique foi em um botão
+    //   if (menu && !menu.contains(event.target) && !button) {
+    //     console.log('Clique fora do menu, fechando...'); // Para depuração
+    //     this.closeMenu();
+    //   }
+    // },
+  },
+  mounted() {
+    document.addEventListener('click', this.handleClickOutside);
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.handleClickOutside);
+  },
+};
 </script>
+
 <style lang="scss" scoped>
 .principal-menu {
   background: $background;
@@ -58,6 +83,7 @@ export default {
   justify-content: space-between;
   padding-inline: 36px;
   color: $white;
+
   button {
     background: none;
     cursor: pointer;
@@ -76,7 +102,6 @@ export default {
 
   ul {
     display: none;
-
     &.show-menu {
       display: flex;
       flex-direction: column;
@@ -88,7 +113,6 @@ export default {
       right: 0;
     }
 
-
     a {
       display: inline-flex;
       width: 100%;
@@ -96,11 +120,9 @@ export default {
       color: $white;
 
       &:visited {
-        color: rgba($white ,.1);
+        color: rgba($white, 0.1);
       }
     }
-
   }
-
 }
 </style>

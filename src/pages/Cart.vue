@@ -1,87 +1,29 @@
 <template>
 
-  <h1>Olha o carrinhoooo {{teste}}</h1>
+  <h1>Olha o carrinhoooo {{ teste }}</h1>
 
   <div class="cart-container">
-
     <div class="itens">
-      <div class="cart-item">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Blue_Bottle%2C_Kyoto_Style_Ice_Coffee_%285909775445%29.jpg" />
-        <h4>Iced Espresso Titulo</h4>
-        <button class="remove-item" @click="removeItem">
+      <div class="cart-item" v-for="(item, index) in itensOnCart" :key="item.id">
+        <img :src="item.image" />
+        <h4>{{ item.title }}</h4>
+        <button class="remove-item" @click="removeItem(item.id)">
           <iconTrash />
         </button>
-        <p>R$ 8,00</p>
-        <input class="btn-qntd" type="number" min="1" max="15" maxlength="2" value="1" />
-      </div>
-
-
-      <div class="cart-item">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Blue_Bottle%2C_Kyoto_Style_Ice_Coffee_%285909775445%29.jpg" />
-        <h4>Iced Espresso Titulo</h4>
-        <button class="remove-item" @click="removeItem">
-          <iconTrash />
-        </button>
-        <p>R$ 8,00</p>
-        <input class="btn-qntd" type="number" min="1" max="15" maxlength="2" value="1" />
-      </div>
-
-      <div class="cart-item">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Blue_Bottle%2C_Kyoto_Style_Ice_Coffee_%285909775445%29.jpg" />
-        <h4>Iced Espresso Titulo</h4>
-        <button class="remove-item" @click="removeItem">
-          <iconTrash />
-        </button>
-        <p>R$ 8,00</p>
-        <input class="btn-qntd" type="number" min="1" max="15" maxlength="2" value="1" />
-      </div>
-
-      <div class="cart-item">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Blue_Bottle%2C_Kyoto_Style_Ice_Coffee_%285909775445%29.jpg" />
-        <h4>Iced Espresso Titulo</h4>
-        <button class="remove-item" @click="removeItem">
-          <iconTrash />
-        </button>
-        <p>R$ 8,00</p>
-        <input class="btn-qntd" type="number" min="1" max="15" maxlength="2" value="1" />
-      </div>
-
-      <div class="cart-item">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Blue_Bottle%2C_Kyoto_Style_Ice_Coffee_%285909775445%29.jpg" />
-        <h4>Iced Espresso Titulo</h4>
-        <button class="remove-item" @click="removeItem">
-          <iconTrash />
-        </button>
-        <p>R$ 8,00</p>
-        <input class="btn-qntd" type="number" min="1" max="15" maxlength="2" value="1" />
-      </div>
-
-
-      <div class="cart-item">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Blue_Bottle%2C_Kyoto_Style_Ice_Coffee_%285909775445%29.jpg" />
-        <h4>Iced Espresso Titulo</h4>
-        <button class="remove-item" @click="removeItem">
-          <iconTrash />
-        </button>
-        <p>R$ 8,00</p>
-        <input class="btn-qntd" type="number" min="1" max="15" maxlength="2" value="1" />
+        <p> R$ {{ item.unitaryPrice }}</p>
+        <input :key="item.id" class="btn-qntd" type="number" min="1" max="15" maxlength="2" :value="item.quantity"
+          @change="updateItem(item.id, index)" />
       </div>
     </div>
 
-    <!--Division-->
+
     <div class="checkout-details">
       <ul>
         <li>
-          <p>Subtotal : R$ 230,04</p>
-          <p>Frete : R$ 230,04</p>
-          <p>Taxa de Serviço : R$ 230,04</p>
-          <p>Total : R$ 230,04</p>
+          <p>Subtotal : R$ {{ taxes.amount }}</p>
+          <p>Frete : R$ {{ taxes.shipping }}</p>
+          <p>Taxa de Serviço : R$ {{ taxes.tax }}</p>
+          <p>Total : R$ {{ taxes.total }}</p>
 
         </li>
       </ul>
@@ -90,13 +32,14 @@
         <span class="paymment-method">
           <label for="pix">
             Pix
+            <iconPix />
           </label>
-
           <input type="radio" name="paymment_method" id="pix" value="pix" v-model="metodoDePagamento">
         </span>
         <span class="paymment-method">
           <label for="cartao">
             Cartão
+            <iconCreditCard/>
           </label>
 
           <input type="radio" id="cartao" name="paymment_method" value="cartao" v-model="metodoDePagamento">
@@ -104,6 +47,7 @@
         <span class="paymment-method">
           <label for="boleto">
             Boleto
+            <iconBarCode/>
           </label>
 
           <input type="radio" id="boleto" name="paymment_method" value="boleto" v-model="metodoDePagamento">
@@ -112,6 +56,7 @@
         <span class="paymment-method">
           <label for="ticket">
             Ticket
+            <iconTicket/>
           </label>
           <input type="radio" id="ticket" name="paymment_method" value="ticket" v-model="metodoDePagamento">
         </span>
@@ -120,7 +65,7 @@
       <form action="">
 
         <section v-if="metodoDePagamento == 'cartao' || metodoDePagamento == 'ticket'">
-          <!--Cartão de credito-->
+        <p style="marginBlock: 20px ;">{{ metodoDePagamento == 'cartao' ? 'Cartão de credito' : 'Vale Alimentação'}}</p>  
           <input type="text" placeholder="Nome do titular" />
           <input type="text" placeholder="Numero do cartão" />
           <span>
@@ -130,7 +75,7 @@
         </section>
 
         <section v-if="metodoDePagamento == 'boleto'">
-          <!--Boleto-->
+          Boleto
           <p>00190 50095401 44816069 0680935 0314337 3700 00000 100</p>
         </section>
 
@@ -150,25 +95,49 @@
 import Card from '../components/ProductCard.vue'
 import iconTrash from '../assets/icons/trash.svg'
 import { useCartStore } from '../store/index';
+import { mapActions } from 'pinia';
+import { setTax } from '../utils';
+import iconPix from '../assets/icons/paymment/pix.svg'
+import iconCreditCard from '../assets/icons/paymment/credit-card.svg'
+import iconBarCode from '../assets/icons/paymment/bar-code.svg'
+import iconTicket from '../assets/icons/paymment/ticket.svg'
+
 
 
 export default {
   components: {
-    Card, iconTrash
+    Card, iconTrash, iconPix, iconCreditCard,
+    iconBarCode, iconTicket
   },
   data() {
     return {
-     // name: '',
       metodoDePagamento: null,
-      teste : useCartStore().name
+      teste: useCartStore().name,
+      itensOnCart: useCartStore().cartList,
+      amout: useCartStore().cartAmout,
+      taxes: setTax(useCartStore().cartAmout)
+
     }
   },
   methods: {
+    ...mapActions(useCartStore, ['removeToCart', 'changeQuantity']),
     takeToCart() {
       this.$router.push('/')
     },
-    removeItem() {
-      console.log('Removendo item')
+    updateItem(id, index) {
+      let valueInput = document.querySelectorAll('.btn-qntd')[index].value
+      // valueInput = valueInput <= 0 ? 1 : valueInput && valueInput > 15 ? 15 : valueInput
+      this.changeQuantity(id, Number(valueInput <= 0 ? 1 : valueInput))
+      this.amout = useCartStore().cartAmout
+      this.setTaxes()
+    },
+    removeItem(id) {
+      this.removeToCart(id)
+      this.amout = useCartStore().cartAmout
+    },
+
+    setTaxes() {
+      this.taxes = setTax(this.amout)
     }
   },
   watch: {
@@ -186,8 +155,6 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-
-
 
 
   .cart-item {
@@ -235,7 +202,6 @@ export default {
     }
 
     .btn-qntd {
-      // border: 1px solid teal;
       height: 50%;
       text-align: center;
       margin-block: 0px !important;
@@ -247,12 +213,33 @@ export default {
 
 .checkout-details {
   width: 100%;
-  border: 2px solid rgba(97, 160, 212, 0.288);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  padding: 30px;
+  border-radius: 4px;
 
   ul {
-    border-bottom: 2px dotted brown;
+    border-bottom: .5px solid brown;
+    margin-top: 25px;
     margin-bottom: 15px;
     padding-bottom: 8px;
+   
+  }
+
+  form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    width: min-content;
+
+    input{
+      width: 100%;
+    }
+
   }
 
   .checkout {
@@ -262,31 +249,36 @@ export default {
     padding-block: 10px;
     border-radius: 4px;
     cursor: pointer;
-    width: 70%;
+    width: clamp(100px, 75vw, 250px);
+    
+    align-self: center;
+    justify-self: center;
   }
 
   .paymment-method {
-    border: 1px solid red;
     display: inline-flex;
     width: 70px;
     height: 70px;
-    flex-direction: column;
+    flex-direction: column;  
 
     label {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       width: 100%;
-      background: rebeccapurple;
-      color: aqua !important;
+      height: 100%;
+      cursor: pointer;
+
+      svg {
+        width: 70%;
+        height: 70%;
+      }
     }
 
     input {
-      opacity: 0;
-
-      :checked {
-        .paymment-method {
-          border: 2px solid green;
-        }
-      }
+      display: none !important;
+      width: 0;
+      height: 0;
     }
   }
 }
@@ -301,7 +293,10 @@ export default {
 
     .checkout-details {
       width: clamp(100px, 35vw, 450px);
-      border: 2px solid rgb(108, 197, 5);
+
+      ul{
+        margin-top: 0;
+      }
 
     }
   }

@@ -5,21 +5,20 @@ $palebrown: #B29F91;
 $background: #422110;
 $white: #ececec;
 
-@mixin gradient(){
-    background: linear-gradient(to right,#CB8A58,#723d28 );
+@mixin gradient() {
+    background: linear-gradient(to right, #CB8A58, #723d28);
 }
 
-@mixin flex-column(){
+@mixin flex-column() {
     display: flex;
     flex-direction: column;
 }
 
-@mixin container-max-width(){
+@mixin container-max-width() {
     max-width: 1280px;
-    border: 5px solid greenyellow;
 }
 
-*{
+* {
     margin: 0;
     padding: 0;
     outline: none;
@@ -29,33 +28,35 @@ $white: #ececec;
     text-decoration: none;
 }
 
-body{
+body {
     font-family: "Raleway", sans-serif;
-    font-optical-sizing: auto;  
-    background: #e6d7cc6c;    
+    font-optical-sizing: auto;
+    background: #e6d7cc6c;
 }
 
-input{
+input {
     height: 45px;
     border-radius: 5px;
-    width: clamp(40px,85%,320px);
+    width: clamp(40px, 85%, 320px);
     padding: 8px;
     margin-block: 8px;
 }
 
-input:not([type=submit]){
+input:not([type=submit]) {
     border: 1px solid $palebrown;
- 
-}   
-
-input[type=submit]{
-   @include gradient();
-   color: $white;
 
 }
 
-a{
-    &:visited{
-        all: unset;
-    }
+input[type=submit] {
+    @include gradient();
+    color: $white;
+
+}
+
+a {
+    all: unset;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: .5s;
+   
 }

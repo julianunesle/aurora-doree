@@ -1,28 +1,32 @@
 <template>
 
   <div class="products-container">
-    <Card />
-    <Card />
-    <Card />
-    <Card />
-    <Card />
-    <Card />
+    <Card v-for="item in products" :key="item.id" :idItem="item.id" :title="item.title" :img="item.image" />
   </div>
 </template>
 <script>
 import Card from '../components/ProductCard.vue'
+import axios from 'axios';
+import { api_url } from '../api';
 export default {
   components: {
     Card
   },
   data() {
     return {
-      name: 'Kelly'
+      products : []
     }
   },
-  methods: {},
+  methods: {
+    getAllCoffees(){
+      axios
+      .get(`${api_url}/hot`)
+      .then((response) => 
+      this.products = response.data)
+    }
+  },
   mounted() {
-    //  console.log('Abri!')
+    this.getAllCoffees()
   }
 }
 </script>

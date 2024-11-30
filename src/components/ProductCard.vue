@@ -1,26 +1,40 @@
 <template>
-    <RouterLink to="/produto/1">
-    <div class="card">
-        <div class="img-wrap">
-
-            <img
-                src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Blue_Bottle%2C_Kyoto_Style_Ice_Coffee_%285909775445%29.jpg">
+    <RouterLink :to="`/produto/${idItem}`">
+        <div class="card">
+            <div class="img-wrap">
+                <img :src="img">
+            </div>
+            <span class="info">
+                <h2>
+                    {{ title ? title : 'Titulo Fixed' }}
+                </h2>
+                <span> R${{ translateValue(idItem) }}
+                      <!-- <button>+</button> -->
+                    </span>
+            </span>
         </div>
-        <span class="info">
-            <h2>
-                Titulo
-            </h2>
-            <!-- <p>Ännu en berömd och utsökt kall dryck för dem som föredrar choklad. Tänk dig smaken av en shake med
-                choklad och vispad grädde på toppen.</p> -->
-            <span> R$2.89 <button>+</button></span>
-        </span>
-    </div>
-</RouterLink>
+    </RouterLink>
 </template>
 <script>
 import { RouterLink } from 'vue-router';
+import { setValue } from '../utils';
+export default {
+    props: {
+        title: String,
+        img: String,
+        idItem: Number
+    },
+    methods:{
+        translateValue(){
+        return setValue(this.idItem)
+        }
+    }
+}
 </script>
 <style lang="scss">
+a{
+    width: min-content;
+}
 .card {
     margin: 10px;
     width: 250px;
