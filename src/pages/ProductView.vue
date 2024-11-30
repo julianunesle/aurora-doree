@@ -26,6 +26,9 @@
 import axios from 'axios';
 import Card from '../components/ProductCard.vue'
 import { api_url } from '../api';
+import { useCartStore } from '../store';
+import { mapActions } from 'pinia';
+import { setValue } from '../utils';
 export default {
   components: {
     Card
@@ -35,17 +38,21 @@ export default {
       selectedProduct: []
     }
   },
-  //Tirar o fixado do componete 
   methods: {
-    takeToCart(id) {
-      console.log('Adicionar ao carrinho', id)
-      //    this.$router.push('/cart')
+    ...mapActions(useCartStore,['addToCart']),
+    takeToCart() {
+      let item = Object.assign(this.selectedProduct, {quantity: 1, unitaryPrice: setValue(this.selectedProduct.id) })
+      this.addToCart(item)
+
     },
     getCoffeeById() {
       let id = this.$route.params.id
       axios.get(`${api_url}/hot/${id}`)
         .then((response) => this.selectedProduct = response.data)
 
+    },
+    addProductToCart(){
+      this.addToCart()
     }
   },
   mounted() {
