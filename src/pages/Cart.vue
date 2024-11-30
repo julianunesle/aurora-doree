@@ -1,8 +1,10 @@
 <template>
 
-  <h1>Olha o carrinhoooo {{ teste }}</h1>
+  <div v-if="itensOnCart.length == 0">
+    <h1>Nada por aqui</h1>
+  </div>
 
-  <div class="cart-container">
+  <div v-else class="cart-container">
     <div class="itens">
       <div class="cart-item" v-for="(item, index) in itensOnCart" :key="item.id">
         <img :src="item.image" />
@@ -39,7 +41,7 @@
         <span class="paymment-method">
           <label for="cartao">
             Cartão
-            <iconCreditCard/>
+            <iconCreditCard />
           </label>
 
           <input type="radio" id="cartao" name="paymment_method" value="cartao" v-model="metodoDePagamento">
@@ -47,7 +49,7 @@
         <span class="paymment-method">
           <label for="boleto">
             Boleto
-            <iconBarCode/>
+            <iconBarCode />
           </label>
 
           <input type="radio" id="boleto" name="paymment_method" value="boleto" v-model="metodoDePagamento">
@@ -56,7 +58,7 @@
         <span class="paymment-method">
           <label for="ticket">
             Ticket
-            <iconTicket/>
+            <iconTicket />
           </label>
           <input type="radio" id="ticket" name="paymment_method" value="ticket" v-model="metodoDePagamento">
         </span>
@@ -65,7 +67,8 @@
       <form action="">
 
         <section v-if="metodoDePagamento == 'cartao' || metodoDePagamento == 'ticket'">
-        <p style="marginBlock: 20px ;">{{ metodoDePagamento == 'cartao' ? 'Cartão de credito' : 'Vale Alimentação'}}</p>  
+          <p style="marginBlock: 20px ;">{{ metodoDePagamento == 'cartao' ? 'Cartão de credito' : 'Vale Alimentação' }}
+          </p>
           <input type="text" placeholder="Nome do titular" />
           <input type="text" placeholder="Numero do cartão" />
           <span>
@@ -154,8 +157,8 @@ export default {
 .cart-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-
+  justify-content: center;
+  margin-block: 32px;
 
   .cart-item {
     width: 350px;
@@ -225,10 +228,10 @@ export default {
     margin-top: 25px;
     margin-bottom: 15px;
     padding-bottom: 8px;
-   
+
   }
 
-  form{
+  form {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -236,7 +239,7 @@ export default {
     align-items: center;
     width: min-content;
 
-    input{
+    input {
       width: 100%;
     }
 
@@ -250,7 +253,7 @@ export default {
     border-radius: 4px;
     cursor: pointer;
     width: clamp(100px, 75vw, 250px);
-    
+
     align-self: center;
     justify-self: center;
   }
@@ -259,7 +262,7 @@ export default {
     display: inline-flex;
     width: 70px;
     height: 70px;
-    flex-direction: column;  
+    flex-direction: column;
 
     label {
       display: flex;
@@ -287,14 +290,18 @@ export default {
 @media screen and (min-width:768px) {
   .cart-container {
     max-width: 1280px;
-    justify-content: space-around;
     margin-inline: auto;
+    justify-content: center;
+    column-gap: 50px;
 
+    .cart-item {
+      width: 400px;
+    }
 
     .checkout-details {
       width: clamp(100px, 35vw, 450px);
 
-      ul{
+      ul {
         margin-top: 0;
       }
 
