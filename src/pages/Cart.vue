@@ -103,7 +103,6 @@ export default {
   },
   data() {
     return {
-      // name: '',
       metodoDePagamento: null,
       teste: useCartStore().name,
       itensOnCart: useCartStore().cartList,
