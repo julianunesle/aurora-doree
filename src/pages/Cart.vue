@@ -1,7 +1,9 @@
 <template>
 
-  <div v-if="itensOnCart.length == 0">
-    <h1>Nada por aqui</h1>
+  <div v-if="itensOnCart.length == 0" class="empty-cart">
+    <h3>Ainda não escolheu um cafézinho?</h3>
+    <RouterLink to="/">Venha ver nossas opçoes! </RouterLink>
+  
   </div>
 
   <div v-else class="cart-container">
@@ -166,6 +168,18 @@ export default {
 }
 </script>
 <style lang="scss">
+.empty-cart{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 90dvh;
+
+  a{
+    text-decoration: underline;
+    font-weight: 500;
+  }
+}
 .text-center{
   text-align: center;
   margin-block: 10px;
