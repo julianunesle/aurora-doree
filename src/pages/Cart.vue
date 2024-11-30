@@ -1,80 +1,23 @@
 <template>
 
-  <h1>Olha o carrinhoooo {{teste}}</h1>
+  <h1>Olha o carrinhoooo {{ teste }}</h1>
 
   <div class="cart-container">
 
-    <div class="itens">
+    <div class="itens" v-for="(item, index) in itensOnCart" :key="item.id">
       <div class="cart-item">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Blue_Bottle%2C_Kyoto_Style_Ice_Coffee_%285909775445%29.jpg" />
-        <h4>Iced Espresso Titulo</h4>
-        <button class="remove-item" @click="removeItem">
+        <img :src="item.image" />
+        <h4>{{ item.title }}</h4>
+        <button class="remove-item" @click="removeItem(item.id)">
           <iconTrash />
         </button>
-        <p>R$ 8,00</p>
-        <input class="btn-qntd" type="number" min="1" max="15" maxlength="2" value="1" />
-      </div>
-
-
-      <div class="cart-item">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Blue_Bottle%2C_Kyoto_Style_Ice_Coffee_%285909775445%29.jpg" />
-        <h4>Iced Espresso Titulo</h4>
-        <button class="remove-item" @click="removeItem">
-          <iconTrash />
-        </button>
-        <p>R$ 8,00</p>
-        <input class="btn-qntd" type="number" min="1" max="15" maxlength="2" value="1" />
-      </div>
-
-      <div class="cart-item">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Blue_Bottle%2C_Kyoto_Style_Ice_Coffee_%285909775445%29.jpg" />
-        <h4>Iced Espresso Titulo</h4>
-        <button class="remove-item" @click="removeItem">
-          <iconTrash />
-        </button>
-        <p>R$ 8,00</p>
-        <input class="btn-qntd" type="number" min="1" max="15" maxlength="2" value="1" />
-      </div>
-
-      <div class="cart-item">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Blue_Bottle%2C_Kyoto_Style_Ice_Coffee_%285909775445%29.jpg" />
-        <h4>Iced Espresso Titulo</h4>
-        <button class="remove-item" @click="removeItem">
-          <iconTrash />
-        </button>
-        <p>R$ 8,00</p>
-        <input class="btn-qntd" type="number" min="1" max="15" maxlength="2" value="1" />
-      </div>
-
-      <div class="cart-item">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Blue_Bottle%2C_Kyoto_Style_Ice_Coffee_%285909775445%29.jpg" />
-        <h4>Iced Espresso Titulo</h4>
-        <button class="remove-item" @click="removeItem">
-          <iconTrash />
-        </button>
-        <p>R$ 8,00</p>
-        <input class="btn-qntd" type="number" min="1" max="15" maxlength="2" value="1" />
-      </div>
-
-
-      <div class="cart-item">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Blue_Bottle%2C_Kyoto_Style_Ice_Coffee_%285909775445%29.jpg" />
-        <h4>Iced Espresso Titulo</h4>
-        <button class="remove-item" @click="removeItem">
-          <iconTrash />
-        </button>
-        <p>R$ 8,00</p>
-        <input class="btn-qntd" type="number" min="1" max="15" maxlength="2" value="1" />
+        <p> R$ {{ item.unitaryPrice }}</p>
+        <input :key="item.id" class="btn-qntd" type="number" min="1" max="15" maxlength="2" :value="item.quantity" @change="updateItem(item.id,index)"/>
       </div>
     </div>
+ Valor:   {{ amout }}
 
-    <!--Division-->
+    <!-- Division
     <div class="checkout-details">
       <ul>
         <li>
@@ -120,8 +63,8 @@
       <form action="">
 
         <section v-if="metodoDePagamento == 'cartao' || metodoDePagamento == 'ticket'">
-          <!--Cartão de credito-->
-          <input type="text" placeholder="Nome do titular" />
+          Cartão de credito
+           <input type="text" placeholder="Nome do titular" />
           <input type="text" placeholder="Numero do cartão" />
           <span>
             <input type="input" placeholder="CCV" />
@@ -130,7 +73,7 @@
         </section>
 
         <section v-if="metodoDePagamento == 'boleto'">
-          <!--Boleto-->
+          Boleto
           <p>00190 50095401 44816069 0680935 0314337 3700 00000 100</p>
         </section>
 
@@ -138,7 +81,7 @@
         <button class="checkout" v-if="metodoDePagamento == 'pix' || metodoDePagamento == 'boleto'">Copiar</button>
         <button class="checkout" v-else>Finalizar Compra</button>
       </form>
-    </div>
+    </div> -->
 
   </div>
 
@@ -150,6 +93,8 @@
 import Card from '../components/ProductCard.vue'
 import iconTrash from '../assets/icons/trash.svg'
 import { useCartStore } from '../store/index';
+import { mapActions } from 'pinia';
+
 
 
 export default {
@@ -158,17 +103,27 @@ export default {
   },
   data() {
     return {
-     // name: '',
+      // name: '',
       metodoDePagamento: null,
-      teste : useCartStore().name
+      teste: useCartStore().name,
+      itensOnCart: useCartStore().cartList,
+      amout: useCartStore().cartAmout,
+      
     }
   },
   methods: {
+    ...mapActions(useCartStore, ['removeToCart', 'changeQuantity']),
     takeToCart() {
       this.$router.push('/')
     },
-    removeItem() {
-      console.log('Removendo item')
+    updateItem(id,index){
+      let valueInput = document.querySelectorAll('.btn-qntd')[index].value
+     // valueInput = valueInput <= 0 ? 1 : valueInput && valueInput > 15 ? 15 : valueInput
+      this.changeQuantity(id,Number(valueInput <= 0 ? 1 : valueInput))
+      this.amout = useCartStore().cartAmout
+    },
+    removeItem(id) {
+      this.removeToCart(id)
     }
   },
   watch: {
