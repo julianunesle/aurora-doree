@@ -8,7 +8,9 @@
                 <h2>
                     {{ title ? title : 'Titulo Fixed' }}
                 </h2>
-                <span> R${{ translateValue(idItem) }}  <button>+</button></span>
+                <span> R${{ translateValue(idItem) }}
+                      <!-- <button>+</button> -->
+                    </span>
             </span>
         </div>
     </RouterLink>
