@@ -50,6 +50,7 @@ input:not([type=submit]) {
 input[type=submit] {
     @include gradient();
     color: $white;
+    cursor: pointer;
 
 }
 

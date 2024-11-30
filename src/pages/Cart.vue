@@ -1,7 +1,9 @@
 <template>
 
-  <div v-if="itensOnCart.length == 0">
-    <h1>Nada por aqui</h1>
+  <div v-if="itensOnCart.length == 0" class="empty-cart">
+    <h3>Ainda não escolheu um cafézinho?</h3>
+    <RouterLink to="/">Venha ver nossas opçoes! </RouterLink>
+  
   </div>
 
   <div v-else class="cart-container">
@@ -20,72 +22,81 @@
 
 
     <div class="checkout-details">
-      <ul>
-        <li>
-          <p>Subtotal : R$ {{ taxes.amount }}</p>
-          <p>Frete : R$ {{ taxes.shipping }}</p>
-          <p>Taxa de Serviço : R$ {{ taxes.tax }}</p>
-          <p>Total : R$ {{ taxes.total }}</p>
-
-        </li>
-      </ul>
-
-      <section class="paymment">
-        <span class="paymment-method">
-          <label for="pix">
-            Pix
-            <iconPix />
-          </label>
-          <input type="radio" name="paymment_method" id="pix" value="pix" v-model="metodoDePagamento">
-        </span>
-        <span class="paymment-method">
-          <label for="cartao">
-            Cartão
-            <iconCreditCard />
-          </label>
-
-          <input type="radio" id="cartao" name="paymment_method" value="cartao" v-model="metodoDePagamento">
-        </span>
-        <span class="paymment-method">
-          <label for="boleto">
-            Boleto
-            <iconBarCode />
-          </label>
-
-          <input type="radio" id="boleto" name="paymment_method" value="boleto" v-model="metodoDePagamento">
-        </span>
-
-        <span class="paymment-method">
-          <label for="ticket">
-            Ticket
-            <iconTicket />
-          </label>
-          <input type="radio" id="ticket" name="paymment_method" value="ticket" v-model="metodoDePagamento">
-        </span>
-      </section>
-
-      <form action="">
-
-        <section v-if="metodoDePagamento == 'cartao' || metodoDePagamento == 'ticket'">
-          <p style="marginBlock: 20px ;">{{ metodoDePagamento == 'cartao' ? 'Cartão de credito' : 'Vale Alimentação' }}
-          </p>
-          <input type="text" placeholder="Nome do titular" />
-          <input type="text" placeholder="Numero do cartão" />
-          <span>
-            <input type="input" placeholder="CCV" />
-            <input type="input" placeholder="00/22" />
+      <p v-if="!isLogged">
+         <RouterLink to="/login?status=checkout">Entre para finalizar</RouterLink>
+      </p>
+      <span v-else >
+        <ul>
+          <li>
+            <p>Subtotal : R$ {{ taxes.amount }}</p>
+            <p>Frete : R$ {{ taxes.shipping }}</p>
+            <p>Taxa de Serviço : R$ {{ taxes.tax }}</p>
+            <p>Total : R$ {{ taxes.total }}</p>
+  
+          </li>
+        </ul>
+  
+        <section class="paymment">
+          <span class="paymment-method">
+            <label for="pix">
+              Pix
+              <iconPix />
+            </label>
+            <input type="radio" name="paymment_method" id="pix" value="pix" v-model="metodoDePagamento">
+          </span>
+          <span class="paymment-method">
+            <label for="cartao">
+              Cartão
+              <iconCreditCard />
+            </label>
+  
+            <input type="radio" id="cartao" name="paymment_method" value="cartao" v-model="metodoDePagamento">
+          </span>
+          <span class="paymment-method">
+            <label for="boleto">
+              Boleto
+              <iconBarCode />
+            </label>
+  
+            <input type="radio" id="boleto" name="paymment_method" value="boleto" v-model="metodoDePagamento">
+          </span>
+  
+          <span class="paymment-method">
+            <label for="ticket">
+              Ticket
+              <iconTicket />
+            </label>
+            <input type="radio" id="ticket" name="paymment_method" value="ticket" v-model="metodoDePagamento">
           </span>
         </section>
-
-        <section v-if="metodoDePagamento == 'boleto'">
-          Boleto
-          <p>00190 50095401 44816069 0680935 0314337 3700 00000 100</p>
-        </section>
-
-
-        <button class="checkout" v-if="metodoDePagamento == 'pix' || metodoDePagamento == 'boleto'">Copiar</button>
-        <button class="checkout" v-else>Finalizar Compra</button>
-      </form>
+  
+        <form action="">
+  
+          <section v-if="metodoDePagamento == 'cartao' || metodoDePagamento == 'ticket'">
+            <p style="marginBlock: 20px ;">{{ metodoDePagamento == 'cartao' ? 'Cartão de credito' : 'Vale Alimentação' }}
+            </p>
+            <input type="text" placeholder="Nome do titular" />
+            <input type="text" placeholder="Numero do cartão" />
+            <span>
+              <input type="input" placeholder="CCV" />
+              <input type="input" placeholder="00/22" />
+            </span>
+          </section>
+  
+          <section v-if="metodoDePagamento == 'boleto'">
+            <p class="text-center">Linha digitavel</p>
+            <p>00190 50095401 44816069 0680935 0314337 3700 00000 100</p>
+          </section>
+          <section v-if="metodoDePagamento == 'pix'">
+            <p class="text-center">Chave aleatória</p>
+            <p>BR0019 0 50095401 44816069 AEQ0680935 GG0314337 3700 7181712 280924FLRK</p>
+          </section>
+  
+  
+          <button class="checkout" v-if="metodoDePagamento == 'pix' || metodoDePagamento == 'boleto'">Copiar</button>
+          <button class="checkout" v-else>Finalizar Compra</button>
+        </form>
+      </span>
     </div>
 
   </div>
@@ -104,6 +115,7 @@ import iconPix from '../assets/icons/paymment/pix.svg'
 import iconCreditCard from '../assets/icons/paymment/credit-card.svg'
 import iconBarCode from '../assets/icons/paymment/bar-code.svg'
 import iconTicket from '../assets/icons/paymment/ticket.svg'
+import { RouterLink } from 'vue-router';
 
 
 
@@ -118,7 +130,8 @@ export default {
       teste: useCartStore().name,
       itensOnCart: useCartStore().cartList,
       amout: useCartStore().cartAmout,
-      taxes: setTax(useCartStore().cartAmout)
+      taxes: setTax(useCartStore().cartAmout),
+      isLogged: useCartStore().isLogged
 
     }
   },
@@ -137,6 +150,7 @@ export default {
     removeItem(id) {
       this.removeToCart(id)
       this.amout = useCartStore().cartAmout
+      this.setTaxes()
     },
 
     setTaxes() {
@@ -154,6 +168,22 @@ export default {
 }
 </script>
 <style lang="scss">
+.empty-cart{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 90dvh;
+
+  a{
+    text-decoration: underline;
+    font-weight: 500;
+  }
+}
+.text-center{
+  text-align: center;
+  margin-block: 10px;
+}
 .cart-container {
   display: flex;
   flex-wrap: wrap;
@@ -222,6 +252,9 @@ export default {
   background: #fff;
   padding: 30px;
   border-radius: 4px;
+  span{
+    display: inline-block;
+  }
 
   ul {
     border-bottom: .5px solid brown;
@@ -237,7 +270,7 @@ export default {
     justify-content: center;
     justify-items: center;
     align-items: center;
-    width: min-content;
+    width: 100%;
 
     input {
       width: 100%;

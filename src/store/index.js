@@ -12,7 +12,7 @@ export const useCartStore = defineStore('cart', {
     doubleCount: (state) => state.count * 2,
   },
   actions: {
-    setLogged(status){
+    setLogged(status) {
       this.isLogged = status
     },
     getSubtotal() {
