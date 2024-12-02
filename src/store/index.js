@@ -5,13 +5,18 @@ export const useCartStore = defineStore('cart', {
     count: 0,
     isLogged: false,
     cartAmout: 0,
-    cartList: []
+    cartList: [],
+    modalIsVisible: false
   }),
 
   getters: {
     doubleCount: (state) => state.count * 2,
   },
   actions: {
+    setShowModal(status) {
+      this.modalIsVisible = status
+      console.log('amksdnjd')
+    },
     setLogged(status) {
       this.isLogged = status
     },
