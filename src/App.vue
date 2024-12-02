@@ -15,12 +15,10 @@ export default {
   },
   data() {
     return {
-      name: 'Kelly'
     }
   },
   methods: {},
   mounted() {
-  //  console.log('Abri!')
   }
 }
 </script>
