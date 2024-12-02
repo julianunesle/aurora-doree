@@ -1,10 +1,12 @@
 <template>
-
+<Modal v-if="showModal"/> <!--Colocar if-->
   <div v-if="itensOnCart.length == 0" class="empty-cart">
     <h3>Ainda não escolheu um cafézinho?</h3>
     <RouterLink to="/">Venha ver nossas opçoes! </RouterLink>
   
   </div>
+
+
 
   <div v-else class="cart-container">
     <div class="itens">
@@ -70,7 +72,7 @@
           </span>
         </section>
   
-        <form action="">
+        <form @submit.prevent="finalizarCompra">
   
           <section v-if="metodoDePagamento == 'cartao' || metodoDePagamento == 'ticket'">
             <p style="marginBlock: 20px ;">{{ metodoDePagamento == 'cartao' ? 'Cartão de credito' : 'Vale Alimentação' }}
@@ -94,7 +96,7 @@
   
   
           <button class="checkout" v-if="metodoDePagamento == 'pix' || metodoDePagamento == 'boleto'">Copiar</button>
-          <button class="checkout" v-else>Finalizar Compra</button>
+          <button class="checkout"type="submit" v-else-if="metodoDePagamento">Finalizar Compra</button>
         </form>
       </span>
     </div>
@@ -116,13 +118,14 @@ import iconCreditCard from '../assets/icons/paymment/credit-card.svg'
 import iconBarCode from '../assets/icons/paymment/bar-code.svg'
 import iconTicket from '../assets/icons/paymment/ticket.svg'
 import { RouterLink } from 'vue-router';
+import Modal from '../components/Modal.vue';
 
 
 
 export default {
   components: {
     Card, iconTrash, iconPix, iconCreditCard,
-    iconBarCode, iconTicket
+    iconBarCode, iconTicket, Modal
   },
   data() {
     return {
@@ -131,7 +134,8 @@ export default {
       itensOnCart: useCartStore().cartList,
       amout: useCartStore().cartAmout,
       taxes: setTax(useCartStore().cartAmout),
-      isLogged: useCartStore().isLogged
+      isLogged: useCartStore().isLogged,
+      showModal: useCartStore().modalIsVisible,
 
     }
   },
@@ -155,6 +159,14 @@ export default {
 
     setTaxes() {
       this.taxes = setTax(this.amout)
+    },
+    finalizarCompra(){
+   
+      setTimeout(() => {
+        // this.$router.push("/")
+
+      },1700)
+    
     }
   },
   watch: {
