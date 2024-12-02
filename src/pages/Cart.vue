@@ -1,11 +1,10 @@
 <template>
-<Modal v-if="showModal"/> <!--Colocar if-->
-  <div v-if="itensOnCart.length == 0" class="empty-cart">
+  <Modal :show="showModal" @closeMenu="hideMenu" /> <!--Colocar if-->
+  <div v-if="itensOnCart?.length == 0" class="empty-cart">
     <h3>Ainda não escolheu um cafézinho?</h3>
     <RouterLink to="/">Venha ver nossas opçoes! </RouterLink>
-  
-  </div>
 
+  </div>
 
 
   <div v-else class="cart-container">
@@ -22,22 +21,21 @@
       </div>
     </div>
 
-
     <div class="checkout-details">
       <p v-if="!isLogged">
-         <RouterLink to="/login?status=checkout">Entre para finalizar</RouterLink>
+        <RouterLink to="/login?status=checkout">Entre para finalizar</RouterLink>
       </p>
-      <span v-else >
+      <span v-else>
         <ul>
           <li>
             <p>Subtotal : R$ {{ taxes.amount }}</p>
             <p>Frete : R$ {{ taxes.shipping }}</p>
             <p>Taxa de Serviço : R$ {{ taxes.tax }}</p>
             <p>Total : R$ {{ taxes.total }}</p>
-  
+
           </li>
         </ul>
-  
+
         <section class="paymment">
           <span class="paymment-method">
             <label for="pix">
@@ -51,7 +49,7 @@
               Cartão
               <iconCreditCard />
             </label>
-  
+
             <input type="radio" id="cartao" name="paymment_method" value="cartao" v-model="metodoDePagamento">
           </span>
           <span class="paymment-method">
@@ -59,10 +57,10 @@
               Boleto
               <iconBarCode />
             </label>
-  
+
             <input type="radio" id="boleto" name="paymment_method" value="boleto" v-model="metodoDePagamento">
           </span>
-  
+
           <span class="paymment-method">
             <label for="ticket">
               Ticket
@@ -71,11 +69,12 @@
             <input type="radio" id="ticket" name="paymment_method" value="ticket" v-model="metodoDePagamento">
           </span>
         </section>
-  
+
         <form @submit.prevent="finalizarCompra">
-  
+
           <section v-if="metodoDePagamento == 'cartao' || metodoDePagamento == 'ticket'">
-            <p style="marginBlock: 20px ;">{{ metodoDePagamento == 'cartao' ? 'Cartão de credito' : 'Vale Alimentação' }}
+            <p style="marginBlock: 20px ;">{{ metodoDePagamento == 'cartao' ? 'Cartão de credito' : 'Vale Alimentação'
+              }}
             </p>
             <input type="text" placeholder="Nome do titular" />
             <input type="text" placeholder="Numero do cartão" />
@@ -84,7 +83,7 @@
               <input type="input" placeholder="00/22" />
             </span>
           </section>
-  
+
           <section v-if="metodoDePagamento == 'boleto'">
             <p class="text-center">Linha digitavel</p>
             <p>00190 50095401 44816069 0680935 0314337 3700 00000 100</p>
@@ -93,10 +92,10 @@
             <p class="text-center">Chave aleatória</p>
             <p>BR0019 0 50095401 44816069 AEQ0680935 GG0314337 3700 7181712 280924FLRK</p>
           </section>
-  
-  
+
+
           <button class="checkout" v-if="metodoDePagamento == 'pix' || metodoDePagamento == 'boleto'">Copiar</button>
-          <button class="checkout"type="submit" v-else-if="metodoDePagamento">Finalizar Compra</button>
+          <button class="checkout" type="submit" v-else-if="metodoDePagamento">Finalizar Compra</button>
         </form>
       </span>
     </div>
@@ -135,18 +134,22 @@ export default {
       amout: useCartStore().cartAmout,
       taxes: setTax(useCartStore().cartAmout),
       isLogged: useCartStore().isLogged,
-      showModal: useCartStore().modalIsVisible,
+      showModal: false,
 
     }
   },
   methods: {
-    ...mapActions(useCartStore, ['removeToCart', 'changeQuantity']),
+    ...mapActions(useCartStore, ['removeToCart', 'changeQuantity', 'setShowModal', 'cleanCart']),
+    hideMenu() {
+      this.showModal = false
+      this.$router.push('/')
+    },
+
     takeToCart() {
       this.$router.push('/')
     },
     updateItem(id, index) {
       let valueInput = document.querySelectorAll('.btn-qntd')[index].value
-      // valueInput = valueInput <= 0 ? 1 : valueInput && valueInput > 15 ? 15 : valueInput
       this.changeQuantity(id, Number(valueInput <= 0 ? 1 : valueInput))
       this.amout = useCartStore().cartAmout
       this.setTaxes()
@@ -160,42 +163,36 @@ export default {
     setTaxes() {
       this.taxes = setTax(this.amout)
     },
-    finalizarCompra(){
-   
+    finalizarCompra() {
       setTimeout(() => {
-        // this.$router.push("/")
+        this.showModal = true
+        this.cleanCart()
+      }, 500)
 
-      },1700)
-    
     }
   },
-  watch: {
-    metodoDePagamento(value) {
-      console.log('Valor é:', value)
-    }
-  },
-  mounted() {
 
-  }
 }
 </script>
 <style lang="scss">
-.empty-cart{
+.empty-cart {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   height: 90dvh;
 
-  a{
+  a {
     text-decoration: underline;
     font-weight: 500;
   }
 }
-.text-center{
+
+.text-center {
   text-align: center;
   margin-block: 10px;
 }
+
 .cart-container {
   display: flex;
   flex-wrap: wrap;
@@ -264,7 +261,8 @@ export default {
   background: #fff;
   padding: 30px;
   border-radius: 4px;
-  span{
+
+  span {
     display: inline-block;
   }
 

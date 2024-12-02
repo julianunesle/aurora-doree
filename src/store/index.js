@@ -6,17 +6,13 @@ export const useCartStore = defineStore('cart', {
     isLogged: false,
     cartAmout: 0,
     cartList: [],
-    modalIsVisible: false
+    modalIsVisible: null,
   }),
 
   getters: {
     doubleCount: (state) => state.count * 2,
   },
   actions: {
-    setShowModal(status) {
-      this.modalIsVisible = status
-      console.log('amksdnjd')
-    },
     setLogged(status) {
       this.isLogged = status
     },
@@ -34,7 +30,7 @@ export const useCartStore = defineStore('cart', {
         this.cartList.push(item)
         this.getSubtotal()
       } else {
-        console.log('tem')
+        console.log('Já possui no carrinho')
       }
     },
 
@@ -47,6 +43,10 @@ export const useCartStore = defineStore('cart', {
       let index = this.cartList.findIndex(product => product.id == id)
       this.cartList.splice(index, 1)
       this.getSubtotal()
+    },
+    cleanCart(){
+      this.cartList = [],
+      this.cartAmout = 0
     }
   },
 })
